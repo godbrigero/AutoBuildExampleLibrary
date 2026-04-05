@@ -9,6 +9,8 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+    // Fat JAR with all runtime dependencies (Guava, Commons Math, etc.) for drop-in use.
+    id 'com.gradleup.shadow' version '9.3.0'
 }
 
 repositories {
@@ -39,4 +41,13 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+shadowJar {
+    mergeServiceFiles()
+    archiveClassifier.set('all')
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.shadowJar
 }
